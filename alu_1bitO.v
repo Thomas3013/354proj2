@@ -10,48 +10,45 @@ module alu_1bit_msb (
     output Set,
     output Overflow
 );
-    wire Bmux, Sum, AndResult, OrResult, NandResult, NorResult;
+    wire b_mux, sum, and_out, or_out, nand_out, nor_out;
 
-    // Invert B if Binvert is 1
-    wire B_not;
-    not (B_not, B);
-    assign Bmux = Binvert ? B_not : B;
+    // Flip B if needed
+    wire not_b;
+    not (not_b, B);
+    assign b_mux = Binvert ? not_b : B;
 
-    // Logic operations
-    and (AndResult, A, B);
-    or  (OrResult, A, B);
+    // Basic logic ops
+    and (and_out, A, B);
+    or  (or_out, A, B);
     
-    // NAND and NOR operations
-    nand (NandResult, A, B);
-    nor  (NorResult, A, B);
+    // More logic ops
+    nand (nand_out, A, B);
+    nor  (nor_out, A, B);
 
-    // Full Adder
-    wire AxorB;
-    xor (AxorB, A, Bmux);
-    xor (Sum, AxorB, CarryIn);
+    // Adder stuff
+    wire axorb;
+    xor (axorb, A, b_mux);
+    xor (sum, axorb, CarryIn);
 
-    wire c1, c2;
-    and (c1, A, Bmux);
-    and (c2, AxorB, CarryIn);
-    or  (CarryOut, c1, c2);
+    wire tmp1, tmp2;
+    and (tmp1, A, b_mux);
+    and (tmp2, axorb, CarryIn);
+    or  (CarryOut, tmp1, tmp2);
 
-    // Overflow only for arithmetic operations
-    wire isArithmetic = (Operation == 3'b010) | (Operation == 3'b110);
-    wire overflowWire;
-    xor (overflowWire, CarryIn, CarryOut);
-    assign Overflow = isArithmetic ? overflowWire : 1'b0;
+    // Check for overflow in add/sub only
+    wire is_math = (Operation == 3'b010) | (Operation == 3'b110);
+    wire of_bit;
+    xor (of_bit, CarryIn, CarryOut);
+    assign Overflow = is_math ? of_bit : 1'b0;
     
-    // Set is used for SLT - it's 1 if A < B
-    // For signed numbers, A < B if:
-    // - A is negative and B is positive, OR
-    // - Both have same sign AND subtraction result is negative
-    assign Set = Sum; // Subtraction result (A-B) sign bit
+    // For SLT, we need the sign bit of subtraction
+    assign Set = sum; // Sign bit after A-B
 
-    // Output MUX
-    assign Result = (Operation == 3'b000) ? AndResult :
-                    (Operation == 3'b001) ? OrResult  :
-                    (Operation == 3'b011) ? NandResult :
-                    (Operation == 3'b100) ? NorResult  :
-                    (Operation == 3'b111) ? Less      :
-                    Sum; // for ADD/SUB
+    // Choose output based on operation
+    assign Result = (Operation == 3'b000) ? and_out :
+                    (Operation == 3'b001) ? or_out  :
+                    (Operation == 3'b011) ? nand_out :
+                    (Operation == 3'b100) ? nor_out  :
+                    (Operation == 3'b111) ? Less    :
+                    sum; // for ADD/SUB
 endmodule

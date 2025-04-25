@@ -7,36 +7,36 @@ module alu_1bit (
     output Result,
     output CarryOut
 );
-    wire Bmux, Sum, AndResult, OrResult, NandResult, NorResult;
+    wire b_mux, sum, and_out, or_out, nand_out, nor_out;
 
-    // Bmux = Binvert ? ~B : B
-    wire B_not;
-    not (B_not, B);
-    assign Bmux = Binvert ? B_not : B;
+    // Invert B when needed
+    wire not_b;
+    not (not_b, B);
+    assign b_mux = Binvert ? not_b : B;
 
-    // Logic operations
-    and (AndResult, A, B);
-    or  (OrResult, A, B);
+    // Basic logic ops
+    and (and_out, A, B);
+    or  (or_out, A, B);
     
-    // NAND and NOR operations
-    nand (NandResult, A, B);
-    nor  (NorResult, A, B);
+    // Extra logic ops
+    nand (nand_out, A, B);
+    nor  (nor_out, A, B);
 
-    // Full Adder
-    wire AxorB;
-    xor (AxorB, A, Bmux);
-    xor (Sum, AxorB, CarryIn);
+    // Adder logic
+    wire axorb;
+    xor (axorb, A, b_mux);
+    xor (sum, axorb, CarryIn);
 
-    // CarryOut = (A & Bmux) | (AxorB & CarryIn)
-    wire c1, c2;
-    and (c1, A, Bmux);
-    and (c2, AxorB, CarryIn);
-    or  (CarryOut, c1, c2);
+    // Generate carry out
+    wire tmp1, tmp2;
+    and (tmp1, A, b_mux);
+    and (tmp2, axorb, CarryIn);
+    or  (CarryOut, tmp1, tmp2);
 
-    // Operation selection
-    assign Result = (Operation == 3'b000) ? AndResult :
-                    (Operation == 3'b001) ? OrResult  :
-                    (Operation == 3'b011) ? NandResult :
-                    (Operation == 3'b100) ? NorResult  :
-                    Sum; // for 010 or 110
+    // Pick the right output based on op
+    assign Result = (Operation == 3'b000) ? and_out :
+                    (Operation == 3'b001) ? or_out  :
+                    (Operation == 3'b011) ? nand_out :
+                    (Operation == 3'b100) ? nor_out  :
+                    sum; // for 010 or 110
 endmodule
