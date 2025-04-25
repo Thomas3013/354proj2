@@ -1,0 +1,11 @@
+# Compiled Verilog files
+*.out
+e2e_test_out
+
+# Simulation files
+*.vcd
+
+# Editor files
+*.swp
+*~
+.DS_Store 
