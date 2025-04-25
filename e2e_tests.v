@@ -22,10 +22,24 @@ module testALU;
     begin
      $display("op   a        b        result   zero overflow");
      $monitor ("%b %b(%d) %b(%d) %b(%d) %b    %b",op,a,a,b,b,result,result,zero,overflow);
+     
+     // Original test cases
      op = 3'b000; a = 4'b0111; b = 4'b0010;  // AND
      #1 op = 3'b001; a = 4'b0101; b = 4'b0010;  // OR
      #1 op = 3'b011; a = 4'b0101; b = 4'b0010;  // NAND
      #1 op = 3'b100; a = 4'b0101; b = 4'b0010;  // NOR
+     
+     // Additional NAND test cases
+     #1 op = 3'b011; a = 4'b1111; b = 4'b1111;  // NAND: all 1s with all 1s
+     #1 op = 3'b011; a = 4'b0000; b = 4'b1111;  // NAND: all 0s with all 1s
+     #1 op = 3'b011; a = 4'b0000; b = 4'b0000;  // NAND: all 0s with all 0s
+     
+     // Additional NOR test cases
+     #1 op = 3'b100; a = 4'b0000; b = 4'b0000;  // NOR: all 0s with all 0s
+     #1 op = 3'b100; a = 4'b1111; b = 4'b0000;  // NOR: all 1s with all 0s
+     #1 op = 3'b100; a = 4'b1111; b = 4'b1111;  // NOR: all 1s with all 1s
+     
+     // Original arithmetic and comparison tests
      #1 op = 3'b010; a = 4'b0101; b = 4'b0001;  // ADD
      #1 op = 3'b010; a = 4'b0111; b = 4'b0001;  // ADD overflow (8+1=-8)
      #1 op = 3'b110; a = 4'b0101; b = 4'b0001;  // SUB
