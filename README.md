@@ -5,6 +5,8 @@ This repository contains a 4-bit ALU (Arithmetic Logic Unit) implementation in V
 - AND (000)
 - OR (001)
 - ADD (010)
+- NAND (011)
+- NOR (100)
 - SUB (110)
 - SLT (Set Less Than) (111)
 
@@ -30,4 +32,5 @@ The ALU is implemented as a 4-bit ripple-carry architecture with special handlin
 
 - Zero flag detection
 - Overflow detection for arithmetic operations
-- Proper signed number handling for SLT operation 
+- Proper signed number handling for SLT operation
+- Multiple logic operations: AND, OR, NAND, NOR 

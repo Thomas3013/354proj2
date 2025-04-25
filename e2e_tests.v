@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 // Test Module 
 module testALU;
   reg signed [3:0] a;
@@ -22,6 +24,8 @@ module testALU;
      $monitor ("%b %b(%d) %b(%d) %b(%d) %b    %b",op,a,a,b,b,result,result,zero,overflow);
      op = 3'b000; a = 4'b0111; b = 4'b0010;  // AND
      #1 op = 3'b001; a = 4'b0101; b = 4'b0010;  // OR
+     #1 op = 3'b011; a = 4'b0101; b = 4'b0010;  // NAND
+     #1 op = 3'b100; a = 4'b0101; b = 4'b0010;  // NOR
      #1 op = 3'b010; a = 4'b0101; b = 4'b0001;  // ADD
      #1 op = 3'b010; a = 4'b0111; b = 4'b0001;  // ADD overflow (8+1=-8)
      #1 op = 3'b110; a = 4'b0101; b = 4'b0001;  // SUB
