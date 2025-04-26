@@ -4,6 +4,7 @@ module alu_1bit (
     input Binvert,  // flip b input for subtraction
     input CarryIn,
     input [2:0] Operation,
+    input Less,    // from slt handling logic
     output Result,
     output CarryOut
 );
@@ -41,7 +42,10 @@ module alu_1bit (
     assign Result = 
         (Operation == 3'b000) ? and_out :
         (Operation == 3'b001) ? or_out  :
+        (Operation == 3'b010) ? sum     :
         (Operation == 3'b011) ? nand_out :
         (Operation == 3'b100) ? nor_out  :
-        sum; // default for add (010) or sub (110)
+        (Operation == 3'b110) ? sum     :
+        (Operation == 3'b111) ? Less    : // slt
+        sum; // default case for unspecified operations
 endmodule

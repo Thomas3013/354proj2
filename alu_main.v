@@ -19,13 +19,13 @@ module alu_4bit (
     
 
     // connect all the alu bit slices
-    alu_1bit alu0 (A[0], B[0], flip_b, cin, Operation, out[0], carry[0]);
-    alu_1bit alu1 (A[1], B[1], flip_b, carry[0], Operation, 
+    alu_1bit alu0 (A[0], B[0], flip_b, cin, Operation, slt_bit, out[0], carry[0]);
+    alu_1bit alu1 (A[1], B[1], flip_b, carry[0], Operation, 1'b0, 
                   out[1], carry[1]);
-    alu_1bit alu2 (A[2], B[2], flip_b, carry[1], Operation, out[2], carry[2]); // middle bits
+    alu_1bit alu2 (A[2], B[2], flip_b, carry[1], Operation, 1'b0, out[2], carry[2]); // middle bits
     
     // msb also calculates overflow
-    alu_1bit_msb alu3 (A[3], B[3], flip_b, carry[2], Operation, 
+    alu_1bit_slt alu3 (A[3], B[3], flip_b, carry[2], Operation, 
         is_less, out[3], carry[3], set, of_wire);
     
     // slt handling

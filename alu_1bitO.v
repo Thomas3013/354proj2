@@ -1,6 +1,6 @@
 // most significant bit alu slice 
 // handles overflow detection and set output for slt
-module alu_1bit_msb (
+module alu_1bit_slt (
     input A,
     input B,
     input Binvert,
@@ -55,8 +55,10 @@ module alu_1bit_msb (
     assign Result = 
         (Operation == 3'b000) ? and_out :
         (Operation == 3'b001) ? or_out  :
+        (Operation == 3'b010) ? sum     :
         (Operation == 3'b011) ? nand_out :
         (Operation == 3'b100) ? nor_out  :
+        (Operation == 3'b110) ? sum     :
         (Operation == 3'b111) ? Less     : // slt
-        sum;  // add/sub
+        sum;  // default for unspecified operations
 endmodule
