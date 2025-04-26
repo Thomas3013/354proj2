@@ -60,5 +60,5 @@ module alu_1bit_slt (
         (Operation == 3'b100) ? nor_out  :
         (Operation == 3'b110) ? sum     :
         (Operation == 3'b111) ? Less     : // slt
-        sum;  // default for unspecified operations
+        sum;  
 endmodule

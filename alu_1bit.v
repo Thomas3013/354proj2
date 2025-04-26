@@ -7,8 +7,7 @@ module alu_1bit (
     input Less,    // from slt handling logic
     output Result,
     output CarryOut
-);
-    // declare all the internal wires
+); // declare all the internal wires
     wire b_mux, sum, and_out, or_out, 
         nand_out, nor_out;
 
@@ -38,6 +37,7 @@ module alu_1bit (
     and (tmp2, axorb, CarryIn);  // and gate 2
     or  (CarryOut, tmp1, tmp2);
 
+
     // output mux - pick result based on operation
     assign Result = 
         (Operation == 3'b000) ? and_out :
@@ -47,5 +47,5 @@ module alu_1bit (
         (Operation == 3'b100) ? nor_out  :
         (Operation == 3'b110) ? sum     :
         (Operation == 3'b111) ? Less    : // slt
-        sum; // default case for unspecified operations
+        sum; 
 endmodule
